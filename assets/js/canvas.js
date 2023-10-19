@@ -167,8 +167,6 @@ const Canvas = {
     let src = this.el.dataset.sdf;
     let { colors, outlines } = this.el.dataset;
     if (src == null || src == "") return;
-    console.log(colors);
-    console.log(outlines);
     let sdfCode = `bool normalCols = ${colors == "normals"};
     bool contourCols = ${colors == "contours"};
     bool outlines = ${outlines};
@@ -176,7 +174,6 @@ const Canvas = {
       return ${src};
     }
     `;
-    console.log(sdfCode);
     let fragCode = `${fragCodeA}${sdfCode}${fragCodeB}`;
     const fragmentShader = this.createShader(gl.FRAGMENT_SHADER, fragCode);
     if (fragmentShader == null) return;

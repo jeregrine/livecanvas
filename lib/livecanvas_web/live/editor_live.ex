@@ -14,7 +14,8 @@ defmodule LivecanvasWeb.EditorLive do
        form: form,
        settings: settings,
        code: "",
-       compiled: ""
+       compiled: "",
+       editor_id: RandomString.len(100) |> String.capitalize()
      )}
   end
 
@@ -23,7 +24,7 @@ defmodule LivecanvasWeb.EditorLive do
   end
 
   def handle_event("code-change", %{"code" => code}, socket) do
-    case compile_code(code) do
+    case compile_code(code, socket.assigns.editor_id) do
       {:ok, compiled} ->
         {:noreply,
          socket
@@ -42,17 +43,39 @@ defmodule LivecanvasWeb.EditorLive do
      |> assign(:form, to_form(settings, as: "settings"))}
   end
 
-  defp compile_code(code) do
+  defp compile_code(code, id) do
     try do
       code = String.trim(code)
 
-      eval =
-        "#{@code_imports}\n#{code}\n#{@code_footer}"
+      module = Module.concat([:Livecanvas, :Editor, id])
 
-      {compiled, _} =
-        Code.eval_string(eval)
+      mod = """
+        defmodule #{module} do
+          import Elixir.Livecanvas.Geometry
+          def go() do
+            #{code}
+            |> compile()
+          end
+        end
+      """
 
-      {:ok, compiled}
+      [{mod, bytecode}] = Code.compile_string(mod)
+
+      {:ok, mod} =
+        Safeish.load_bytecode(bytecode, [
+          Livecanvas.Geometry,
+          Enum,
+          Range,
+          Access,
+          Map,
+          MapSet,
+          String,
+          Float,
+          Integer,
+          Stream
+        ])
+
+      {:ok, mod.go()}
     rescue
       error ->
         {:error, error}
@@ -92,15 +115,33 @@ defmodule LivecanvasWeb.EditorLive do
           phx-submit="settings"
         >
           <.input field={@form[:outlines]} label="Outlines" type="checkbox" />
-          <.input
+          <!-- <.input
             field={@form[:colors]}
             options={[{"Countours", "countours"}, {"Normals", "normals"}]}
             label="Colors"
             type="select"
-          />
+          />-->
         </.form>
       </div>
     </div>
     """
+  end
+end
+
+defmodule RandomString do
+  @alphabet Enum.concat([?A..?Z, ?a..?z])
+
+  def len(count) do
+    # Technically not needed, but just to illustrate we're
+    # relying on the PRNG for this in random/1
+    :rand.seed(:exsplus, :os.timestamp())
+
+    Stream.repeatedly(&random_char_from_alphabet/0)
+    |> Enum.take(count)
+    |> List.to_string()
+  end
+
+  defp random_char_from_alphabet() do
+    Enum.random(@alphabet)
   end
 end

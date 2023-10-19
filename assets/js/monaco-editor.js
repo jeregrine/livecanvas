@@ -37,7 +37,6 @@ const CodeEditor = {
     window.addEventListener("resize", () => {
       window.requestAnimationFrame(() => {
         const rect = this.el.getBoundingClientRect();
-        console.log(rect);
         this.editor.layout({ width: rect.width, height: rect.height });
       });
     });
