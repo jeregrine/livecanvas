@@ -6,42 +6,40 @@ const CodeEditor = {
   mounted() {
     self.MonacoEnvironment = {
       globalAPI: true,
-      getWorkerUrl(_workerId, label) {
-        switch (label) {
-          case "css":
-          case "less":
-          case "scss":
-            return "/assets/monaco-editor/language/css/css.worker.js";
-          case "html":
-          case "handlebars":
-          case "razor":
-            return "/assets/monaco-editor/language/html/html.worker.js";
-          case "json":
-            return "/assets/monaco-editor/language/json/json.worker.js";
-          case "javascript":
-          case "typescript":
-            return "/assets/monaco-editor/language/typescript/ts.worker.js";
-          default:
-            return "/assets/monaco-editor/editor/editor.worker.js";
-        }
+      getWorkerUrl(_workerId, _label) {
+        return "/assets/monaco-editor/editor/editor.worker.js";
       },
     };
 
     const container = this.el.querySelector("[data-el-code-editor]");
     const { language, code } = this.el.dataset;
 
-    monaco.editor.defineTheme("dark", dark)
-    monaco.editor.defineTheme("light", light)
+    monaco.editor.defineTheme("dark", dark);
+    monaco.editor.defineTheme("light", light);
+    let savedCode = window.localStorage.getItem("code");
+    if (savedCode != null) this.pushEvent("code-change", { code: savedCode });
 
     this.editor = monaco.editor.create(container, {
       language: language,
       theme: "dark",
       fontSize: 14,
-      value: code,
+      value: savedCode || code,
       minimap: {
-        enabled: false
-      }
+        enabled: false,
+      },
       // ... other options
+    });
+    this.editor.getModel().onDidChangeContent(() => {
+      window.localStorage.setItem("code", this.editor.getValue());
+      this.pushEvent("code-change", { code: this.editor.getValue() });
+    });
+
+    window.addEventListener("resize", () => {
+      window.requestAnimationFrame(() => {
+        const rect = this.el.getBoundingClientRect();
+        console.log(rect);
+        this.editor.layout({ width: rect.width, height: rect.height });
+      });
     });
   },
 

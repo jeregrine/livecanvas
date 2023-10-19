@@ -300,7 +300,7 @@ defmodule LivecanvasWeb.CoreComponents do
 
     ~H"""
     <div phx-feedback-for={@name}>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <label class="flex items-center gap-2 text-sm text-white">
         <input type="hidden" name={@name} value="false" />
         <input
           type="checkbox"
@@ -308,7 +308,7 @@ defmodule LivecanvasWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+          class="rounded border-white text-black ring-1 ring-white"
           {@rest}
         />
         <%= @label %>
@@ -321,11 +321,10 @@ defmodule LivecanvasWeb.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
-      <.label for={@id}><%= @label %></.label>
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
+        class="block p-1 pr-8 w-full rounded-md border border-white-300 bg-black shadow-sm border-white focus:ring-0"
         multiple={@multiple}
         {@rest}
       >
@@ -367,12 +366,6 @@ defmodule LivecanvasWeb.CoreComponents do
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-        class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
-        ]}
         {@rest}
       />
       <.error :for={msg <- @errors}><%= msg %></.error>
@@ -388,7 +381,7 @@ defmodule LivecanvasWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="text-sm font-semibold text-white">
       <%= render_slot(@inner_block) %>
     </label>
     """
