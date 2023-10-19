@@ -23,7 +23,7 @@ c = smooth_intersection(11, b, box(30, 130, 130))
 paren = difference(box(50, 50, 130), c)
 |> slices(10, 1)
 ```
-[[example.png|Image of 2 circles sliced into wedges]]
+[[/example.png|Image of 2 circles sliced into wedges]]
 
 The geometry code is in `lib/livecanvas/geometry.ex` and is partially broken for some functions. Elixir doens't really have partial application I ended up doing term rewriting. I probably could have done this cleaner with a macro but this works.
 
