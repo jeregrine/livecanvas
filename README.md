@@ -1,4 +1,4 @@
-# Livecanvas
+# LiveCanvas
 
 A Signed Distance Field art tool built with Elixir, WebGL, and LiveView.
 
