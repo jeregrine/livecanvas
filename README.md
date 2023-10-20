@@ -4,7 +4,7 @@ A Signed Distance Field art tool built with Elixir, WebGL, and LiveView.
 
 [Signed Distance Fields](https://iquilezles.org/articles/distfunctions/) and the operations you can perform on them allow you to create complex and cool shapes which make for really cool art pieces. Somehow graphics programmers figured out you could do geometry by calculating distances from every vector in a shader and it just workls.
 
-This is a full on port from the incredible [SDFX](https://github.com/adam-james-v/sdfx) by Adam James. I wanted to learn more about SDFs and WebGL, so I decided to port it to Elixir and LiveView and learn along the way. The shader and geometry code is mostly a direct port with some changes to make it work in Elixir. The monaco and backend/compiling steps are mine though.
+This is a full on port from the incredible [SDFX](https://github.com/adam-james-v/sdfx) by Adam James. I wanted to learn more about SDFs and WebGL, so I decided to port it to Elixir and LiveView and learn along the way. The shader and geometry code is mostly a direct port with some changes to make it work in Elixir. 
 ![screenshot](https://github.com/jeregrine/livecanvas/assets/100886/a90049d2-17cf-4fa8-baf6-c327812f5611)
 
 ## Limitations
